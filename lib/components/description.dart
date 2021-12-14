@@ -161,12 +161,14 @@ class _DescriptionBoxState extends State<DescriptionBox> {
                           (await db.collection("products").add(newProd)).id;
                       String childName = "products/" + docID.toString();
 
-                      if (this.widget.prodFeat) {
-                        await db
-                            .collection("featured")
-                            .doc(docID)
-                            .set({"id": docID});
-                      }
+                      await db.collection("products").doc(docID).update({"id" : docID});
+                      
+                      // if (this.widget.prodFeat) {
+                      //   await db
+                      //       .collection("featured")
+                      //       .doc(docID)
+                      //       .set({"id": docID});
+                      // }
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) => HomePage()));
                       Fluttertoast.showToast(msg: "Product Added Successfully");

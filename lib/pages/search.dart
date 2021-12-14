@@ -27,6 +27,7 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           children: [
             Flexible(
+              flex: 1,
               child: Container(
                 color: Colors.white24,
                 child: TextField(
@@ -51,7 +52,8 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
             ),
-            Expanded(
+            Flexible(
+              flex: 10,
               child: StreamBuilder(
                 stream: (searchString.isEmpty)
                     ?FirebaseFirestore.instance.collection("default").snapshots()

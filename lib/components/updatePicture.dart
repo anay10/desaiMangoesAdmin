@@ -59,6 +59,10 @@ class _UpdatePictureState extends State<UpdatePicture> {
                           TextButton(
                             child: Text('Yes'),
                             onPressed: () async {
+                              if(imageUrl.isEmpty){
+                                Navigator.of(context).pop();
+                                return;
+                              }
                               Navigator.of(context).pop();
                               String childString = "products/" + widget.prodName;
                               try {

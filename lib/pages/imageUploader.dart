@@ -67,30 +67,34 @@ class _ImageUploaderState extends State<ImageUploader> {
   }
 
   _uploadImage() async {
-    final _storage = FirebaseStorage.instance;
-    final picker = ImagePicker();
-    XFile image;
-    //get permission
-    Permission.photos.request();
-    var _permissionStatus = await Permission.photos.status;
-    //select image
-    if (_permissionStatus.isGranted) {
-      image = (await picker.pickImage(source: ImageSource.gallery))!;
-      var imageURL = File(image.path);
-      if (image != null) {
-      //   var snapshot =
-      //       await _storage.ref().child("products/image1").putFile(imageURL);
-      //   var downloadURL = await snapshot.ref.getDownloadURL();
+    try{
+      final _storage = FirebaseStorage.instance;
+      final picker = ImagePicker();
+      XFile image;
+      //get permission
+      Permission.photos.request();
+      var _permissionStatus = await Permission.photos.status;
+      //select image
+      if (_permissionStatus.isGranted) {
+        image = (await picker.pickImage(source: ImageSource.gallery))!;
+        var imageURL = File(image.path);
+        if (image != null) {
+          //   var snapshot =
+          //       await _storage.ref().child("products/image1").putFile(imageURL);
+          //   var downloadURL = await snapshot.ref.getDownloadURL();
 
-        setState(() {
-          imageUrl = imageURL.path;
-        });
+          setState(() {
+            imageUrl = imageURL.path;
+          });
+        } else {
+          print("image not selected");
+        }
       } else {
-        print("image not selected");
+        print("permission not granted");
       }
-    } else {
-      print("permission not granted");
+      //upload image to firebase
+    }catch(e){
+      print("ERROR: $e");
     }
-    //upload image to firebase
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:desai_mangoes_admin/pages/orderDetails.dart';
 import 'package:flutter/material.dart';
 
 class Orders extends StatefulWidget {
@@ -13,14 +14,18 @@ class _OrdersState extends State<Orders> {
   int toBeDeliveredNumber = 0;
   bool statusUpdated = false;
   _getOrdersStatus()async{
-    var pendingOrders = await FirebaseFirestore.instance.collection("orders").where('iscompleted', isEqualTo: false).get();
-    pendingOrders.docs.forEach((element) {
-      if(element.get("deliverystat") == "processing"){processingOrderNumber++;}
-      if(element.get("deliverystat") == "transit" || element.get("deliverystat") == "shipped"){toBeDeliveredNumber++;}
-    });
-    setState(() {
-      statusUpdated = true;
-    });
+   try{
+     var pendingOrders = await FirebaseFirestore.instance.collection("orders").where('iscompleted', isEqualTo: false).get();
+     pendingOrders.docs.forEach((element) {
+       if(element.get("deliverystat") == "processing"){processingOrderNumber++;}
+       if(element.get("deliverystat") == "transit" || element.get("deliverystat") == "shipped"){toBeDeliveredNumber++;}
+     });
+     setState(() {
+       statusUpdated = true;
+     });
+   }catch(e){
+     print("ERROR: $e");
+   }
   }
   Color primaryColor = Color(0x002244);
   @override
@@ -60,6 +65,7 @@ class _OrdersState extends State<Orders> {
               ),
             ),
             Expanded(
+              flex: 10,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance.collection("orders").snapshots(),
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot>snapshot){
@@ -75,7 +81,14 @@ class _OrdersState extends State<Orders> {
                           tileColor = Colors.red;
                         }
                         return InkWell(
-                        onTap: (){},
+                        onTap: (){
+                         try{
+                           print("Debug" + e.id);
+                           Navigator.of(context).push(MaterialPageRoute(builder: (context) => OrderDetails(orderDocId: e.id)));
+                         }catch(error){
+                           print("order exception: $error");
+                         }
+                        },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Container(
